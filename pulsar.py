@@ -94,3 +94,6 @@ class Pulsar(object):
                 'sigma_tel',
                 'sigma_rn']
         self.sigmas.update({instr_name: dict(zip(keys, sigma_tup))})
+
+    def get_instr_keys(self):
+        return [k for k in self.sigmas]
