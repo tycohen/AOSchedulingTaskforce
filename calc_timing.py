@@ -16,7 +16,7 @@ def calc_timing(pta,
                 gainexp=None):
     if rxspecfile is None:
         raise ValueError('rxspecfile must be defined')
-    for p in pta:
+    for p in pta.psrlist:
         scope = Telescope(name=rxspecfile.strip(".txt"),
                           dec_lim=dec_lim,
                           lat=lat,
@@ -75,7 +75,7 @@ def get_ctrfreq(nus):
 
 if __name__ == '__main__':
     """ 'Main' function; calculate sigmas for multiple telescope configs"""
-    with open('NG15yr_pta.psrlist', 'rb') as ptaf:
+    with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
     # AO L-S
     Lband_nus = np.linspace(1.44 - .618 / 2, 1.44 + .618 / 2, 55 + 1)[:-1]
@@ -117,5 +117,5 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
     
-    with open('NG15yr_pta.psrlist', 'wb') as ptaf:
+    with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)

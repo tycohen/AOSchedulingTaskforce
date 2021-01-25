@@ -12,6 +12,7 @@ from PTAOptimizer.foppulsar import FOpPulsar
 from resultsreader import ResultsReader
 import ne2001_15y
 from pulsar import Pulsar
+from pta import PTA
 """
 Get 15-year pulsar inputs to frequencyoptimizer.PulsarNoise
 from various sources. Distances are all DM distances even if
@@ -230,7 +231,7 @@ def get_jitter(df):
     return sigma_js
 
 def make_pta(df, write=False):
-    pta = []
+    pta = PTA(name='NG15yr')
     for idx, psr in df.iterrows():
         pulsar = Pulsar(name=psr['name'],
                         period=psr['period'],
@@ -246,9 +247,9 @@ def make_pta(df, write=False):
                         s_1000=psr['S_1000'],
                         spindex=psr['spindex'],
                         sig_j_single=psr['sig_jitter'])
-        pta.append(pulsar)
+        pta.psrlist.append(pulsar)
     if write:
-        with open('NG15yr_pta.psrlist', 'wb') as f:
+        with open('NG15yr.pta', 'wb') as f:
             cPickle.dump(pta, f)
     return pta
 
