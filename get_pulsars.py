@@ -183,9 +183,11 @@ def get_flux_spindex(df):
             else:
                 spindex = np.log10(fluxdict['Rcvr1_2_GUPPI'] / fluxdict['Rcvr_800_GUPPI']) / np.log10(1400. / 800.)
                 flux = fluxdict['Rcvr1_2_GUPPI'] * (1. / 1.4) ** spindex
-        print(n, flux, spindex)
         flux_1GHz.append(flux)
-        spindices.append(spindex)
+        if spindex > 0.:
+            spindices.append(0.)
+        else:
+            spindices.append(spindex)
     return flux_1GHz, spindices
         
 
@@ -214,6 +216,7 @@ def get_template_pars(df):
     return weffs, uscales, w50s
 
 def get_jitter(df):
+    """Get single pulse RMS jitter from Michael's 12.5 yr paper"""
     rr = ResultsReader()
     sigma_js = []
     for n, w50 in zip(df['name'], df['w50']):
