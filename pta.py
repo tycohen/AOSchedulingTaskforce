@@ -28,6 +28,5 @@ class PTA(object):
             if p.name == psr_name:
                 return p
         else:
-            print("No pulsar named {} in PTA".format(psr_name))
-            return
+            raise ValueError("No pulsar named {} in PTA".format(psr_name))
 
