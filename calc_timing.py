@@ -116,6 +116,19 @@ if __name__ == '__main__':
                 lat=38.42,
                 gainmodel=None,
                 gainexp=None)
+
+    # GBT-L + VLA-S
+    vlaS_nus = np.linspace(3. - 2. / 2., 3. + 2. / 2., 50 + 1)[:-1]
+    gbL_vlaS_nus = np.concatenate([nus_gb1_2, vlaS_nus])
+    calc_timing(pta,
+                gbL_vlaS_nus,
+                rxspecfile="GBT_Rcvr_1_2_VLAS_logain.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
     
     with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
