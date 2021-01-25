@@ -1,0 +1,121 @@
+import cPickle
+import numpy as np
+from astropy.coordinates import SkyCoord
+import astropy.units as u
+import frequencyoptimizer as fop
+from PTAOptimizer.telescope import Telescope
+import PTAOptimizer.observatory_ops as oops
+
+def calc_timing(pta,
+                nus,
+                rxspecfile=None,
+                t_int=1800.,
+                dec_lim=None,
+                lat=None,
+                gainmodel=None,
+                gainexp=None):
+    if rxspecfile is None:
+        raise ValueError('rxspecfile must be defined')
+    for p in pta:
+        scope = Telescope(name=rxspecfile.strip(".txt"),
+                          dec_lim=dec_lim,
+                          lat=lat,
+                          gainmodel=gainmodel,
+                          gainexp=gainexp)
+        ra_str = p.name[1:3] + 'h' + p.name[3:5] + 'm' # get RA from Jname
+        j2k_coords = SkyCoord(ra=ra_str, dec=p.dec*u.deg, frame='icrs')
+        scope_noise = fop.TelescopeNoise(1.,
+                                         1.,
+                                         T=t_int,
+                                         rxspecfile=rxspecfile)
+        scope_noise.Gains = oops.get_gains(scope,
+                                           p.dec,
+                                           scope_noise.get_gain(nus))
+        if 0. in scope_noise.Gains:
+            # if any gains are zero, psr below at least 1 scopes horizon
+            p.add_sigmas(scope.name, (-2, -2, -2, -2, -2))
+            continue
+        else:
+            pulsar_noise = fop.PulsarNoise('', 
+                                           alpha=p.spindex,
+                                           dtd=p.dtd,
+                                           dnud=p.dnud,
+                                           taud=p.taud,
+                                           C1=1.16,
+                                           I_0=p.s_1000,
+                                           DM=p.dm,
+                                           D=p.dist,
+                                           tauvar=0.5 * p.taud,
+                                           Weffs=p.weff,
+                                           W50s=p.w50,
+                                           Uscale=p.uscale,
+                                           sigma_Js=p.sigma_jitter(scope_noise.get_T(nus)),
+                                           glon=j2k_coords.galactic.b.degree,
+                                           glat=j2k_coords.galactic.l.degree)
+            gal_noise = fop.GalacticNoise()
+            fop_inst = fop.FrequencyOptimizer(pulsar_noise,
+                                              gal_noise,
+                                              scope_noise,
+                                              nchan=len(nus),
+                                              numax=get_ctrfreq(nus),
+                                              numin=get_ctrfreq(nus),
+                                              vverbose=False)
+            sigma_tup = fop_inst.calc_single(nus)
+            p.add_sigmas(scope.name, sigma_tup)
+    return
+
+#def get_tobs(scope,):
+
+def get_ctrfreq(nus):
+    mid = float(len(nus)) / 2
+    if len(nus) % 2 != 0:
+        return nus[int(mid - .5)]
+    else:
+        return (nus[int(mid)] + nus[int(mid - 1)]) / 2.
+
+if __name__ == '__main__':
+    """ 'Main' function; calculate sigmas for multiple telescope configs"""
+    with open('NG15yr_pta.psrlist', 'rb') as ptaf:
+        pta = cPickle.load(ptaf)
+    # AO L-S
+    Lband_nus = np.linspace(1.44 - .618 / 2, 1.44 + .618 / 2, 55 + 1)[:-1]
+    Shi_nus = np.linspace(2.227 - .354 / 2, 2.227 + .354 / 2, 30 + 1)[:-1]
+    Slo_nus = np.linspace(1.79 - .180 / 2, 1.79 + .180 / 2, 15 + 1)[:-1]
+    aoLS_nus = np.sort(np.concatenate([Lband_nus, Slo_nus, Shi_nus]))
+    calc_timing(pta,
+                aoLS_nus,
+                rxspecfile="AO_Lwide_Swide_logain.txt",
+                dec_lim=(39., 0.),
+                t_int=1800.,
+                lat=18.44,
+                gainmodel=None,
+                gainexp=None)
+
+    # AO 430-L
+    nus_ao430 = np.linspace(.432 - .02 / 2, .432 + .02 / 2, 10 + 1)[:-1]
+    nus_aoL = np.linspace(1.44 - .58 / 2, 1.44 + .58 / 2, 90 + 1)[:-1]
+    ao430L_nus = np.concatenate([nus_ao430, nus_aoL])
+    calc_timing(pta,
+                ao430L_nus,
+                rxspecfile="AO_430_Lwide_logain.txt",
+                t_int=1800.,
+                dec_lim=(39., 0.),
+                lat=18.44,
+                gainmodel=None,
+                gainexp=None)
+    
+    # GB 800-1200
+    nus_gb800 = np.linspace(.820 - .200 / 2, .820 + .200 / 2, 20 + 1)[:-1]
+    nus_gb1_2 = np.linspace(1.510 - .800 / 2, 1.510 + .800 / 2, 80 + 1)[:-1]
+    gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
+    calc_timing(pta,
+                gbt80012_nus,
+                rxspecfile="GBT_Rcvr_800-Rcvr_1_2_logain.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+    
+    with open('NG15yr_pta.psrlist', 'wb') as ptaf:
+        cPickle.dump(pta, ptaf)
