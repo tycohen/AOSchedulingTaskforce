@@ -44,9 +44,11 @@ Class to store an individual 15-yr pulsar
 ### Attributes: 
 
 * `name` : string
-         pulsar name
+
+pulsar name
 * `period` : float
-         pulse period in seconds
+
+pulse period in seconds
 * `dm` : float
            dispersion measure in pc cm^-3
 	   
