@@ -98,6 +98,7 @@ dictionary of dictionaries of RMS components
 
 Return intrinsic jitter noise (in us)
 for given integration time in seconds
+
 `add_sigmas(self, instr_name, sigma_tup)`
 
 instr_name : str
@@ -107,6 +108,7 @@ name of timing instrument
 sigma_tup : tuple
 
 tuple of RMS components
+
 `get_instr_keys(self)`
 
 returns instrument key names for sigmas dict
@@ -132,11 +134,13 @@ list of pulsar.Pulsar objects
 `get_single_pulsar(self, psr_name)`
 
 return pulsar.Pulsar object whose name matches 'psr_name'
+
 `sigma_best(self, exclude="*")`
 
 Get the best instrument for each pulsar
 and return list of tuples of (pulsar name, instrument, sigma_tot)
 Set exclude = string to ignore a particular telescope
+
 `write_to_text(self, filename)`
 
 Write total RMS for each pulsar at each instrument to file
