@@ -30,6 +30,22 @@ class PTA(object):
         else:
             raise ValueError("No pulsar named {} in PTA".format(psr_name))
 
+    def sigma_best(self, exclude='*'):
+        """
+        Get the best instrument for each pulsar
+        and return list of tuples of (pulsar name, instrument, sigma_tot)
+        Set exclude = string to ignore a particular telescope
+        """
+        best_instr_list = []
+        for p in self.psrlist:
+            best_tup = sorted([(p.name, k.strip('_logain'), v['sigma_tot'])
+                               for k, v in p.sigmas.iteritems()
+                               if not exclude in k],
+                              key=lambda t: (t[2] < 0., t[2]))[0]
+            best_instr_list.append(best_tup)
+        return best_instr_list
+
+
     def write_to_txt(self, filename):
         """Write total RMS for each pulsar at each instrument to file"""
         key_names = sorted([k for k in self.psrlist[0].get_instr_keys()])
