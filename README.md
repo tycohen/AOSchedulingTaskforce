@@ -50,56 +50,45 @@ pulsar name
 
 pulse period in seconds
 * `dm` : float
-           dispersion measure in pc cm^-3
-	   
+
+dispersion measure in pc cm^-3	   
 * `dec` : float
 
-          declination in degrees
-	  
+declination in degrees
 * `dtd` : float
 
-            scintillation timescale in seconds
-	    
+scintillation timescale in seconds
 * `dnud` : float
 
-            scintillation bandwidth in GHz
-	    
+scintillation bandwidth in GHz
 * `taud` : float
 
-            scattering timescale in us
-	    
+scattering timescale in us
 * `dist` : float
 
-            DM distance in kpc
-	    
+DM distance in kpc	    
 * `w50` : float
 
-            FWHM of L-band pulse profile in us
-	    
+FWHM of L-band pulse profile in us
 * `weff` : float
 
-            Effective width of the L-band profile in us
-	    
+Effective width of the L-band profile in us
 * `uscale` : float
 
-                scaling factor to distribute intensity across
+scaling factor to distribute intensity across
                 pulse profile
-		
 * `s_1000` : float
 
-                flux density at 1 GHz in mJy
-		
+flux density at 1 GHz in mJy
 * `spindex` : float
 
-                spectral index
-		
+spectral index
 * `sig_j_single` : float
 
-                    single-pulse RMS jitter in us
-		    
+single-pulse RMS jitter in us
 * `sigmas` : dict
 
-                dictionary of dictionaries of RMS components
+dictionary of dictionaries of RMS components
                 for each instrument
 
 
@@ -107,22 +96,20 @@ pulse period in seconds
 
 `sigma_jitter(self, t_int)`
 
-    Return intrinsic jitter noise (in us)
-    for given integration time in seconds
-
+Return intrinsic jitter noise (in us)
+for given integration time in seconds
 `add_sigmas(self, instr_name, sigma_tup)`
 
-    instr_name : str
-    
-                 name of timing instrument
-		 
-    sigma_tup : tuple
-    
-                tuple of RMS components
+instr_name : str
 
+name of timing instrument
+
+sigma_tup : tuple
+
+tuple of RMS components
 `get_instr_keys(self)`
 
-    returns instrument key names for sigmas dict
+returns instrument key names for sigmas dict
 
 
 ## The PTA class
@@ -134,28 +121,25 @@ Class to store timed pulsars
 
 * `name` : string (optional)
 
-         PTA name
-	 
+PTA name
 * `psrlist` : list
 
-         list of pulsar.Pulsar objects
+list of pulsar.Pulsar objects
 
 
 ### Methods
 
 `get_single_pulsar(self, psr_name)`
 
-    return pulsar.Pulsar object whose name matches 'psr_name'
-
+return pulsar.Pulsar object whose name matches 'psr_name'
 `sigma_best(self, exclude="*")`
 
-    Get the best instrument for each pulsar
-    and return list of tuples of (pulsar name, instrument, sigma_tot)
-    Set exclude = string to ignore a particular telescope
-
+Get the best instrument for each pulsar
+and return list of tuples of (pulsar name, instrument, sigma_tot)
+Set exclude = string to ignore a particular telescope
 `write_to_text(self, filename)`
 
-    Write total RMS for each pulsar at each instrument to file
+Write total RMS for each pulsar at each instrument to file
 
 
 ## Example Usage
