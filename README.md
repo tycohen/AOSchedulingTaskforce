@@ -10,6 +10,30 @@ Code used to aggregate pulsar parameters and estimate the TOA uncertainty refere
 * CHIME & GBT L-band
 * CHIME & GBT UWBR
 
+NG15yr_totRMS.txt contains the total RMS for each pulsar at each telescope.
+
+## 15yr_psrs.txt
+
+Contains the parameters of each 15yr pulsar. J0437 not included b/c only visible with VLA.
+
+### Columns
+
+* name
+* period (s)
+* DM (pc cm^-3)
+* DEC: declination (deg)
+* dtd: scintillation timescale from NE2001 (s)
+* dnud: scintillation bandwidth from NE2001 (GHz)
+* taud: scattering timescale from NE2001 (us)
+* dist: DM distance from NE2001 (kpc)
+* w50: FWHM of the L-band template (us)
+* weff: effective width of the L-band template (us)
+* uscale: scales intensity across pulse phase
+* S_1000: flux density at 1 GHz (mJy)
+* spindex: spectral index computed from log(flux ratio)/log(freq ratio)
+using 800/1400 for GBT pulsars, 430/1400 for AO when available, otherwise
+1400/2000. Cutoff at zero
+* sig_jitter: single pulse RMS jitter (us) from [Lam et al. 2019](https://ui.adsabs.harvard.edu/abs/2019ApJ...872..193L/abstract) or 0.63 * W50 if not in 12.5-yr (from Fig. 7 of same paper) 
 
 
 ## The Pulsar class
@@ -102,3 +126,60 @@ Class to store an individual 15-yr pulsar
 `get_instr_keys(self)`
 
     returns instrument key names for sigmas dict
+
+
+## The PTA class
+
+
+Class to store timed pulsars
+
+### Attributes: 
+
+* `name` : string (optional)
+
+         PTA name
+	 
+* `psrlist` : list
+
+         list of pulsar.Pulsar objects
+
+
+### Methods
+
+`get_single_pulsar(self, psr_name)`
+
+    return pulsar.Pulsar object whose name matches 'psr_name'
+
+`sigma_best(self, exclude="*")`
+
+    Get the best instrument for each pulsar
+    and return list of tuples of (pulsar name, instrument, sigma_tot)
+    Set exclude = string to ignore a particular telescope
+
+`write_to_text(self, filename)`
+
+    Write total RMS for each pulsar at each instrument to file
+
+
+## Example Usage
+
+To get a particular pulsar's noise estimates at a particular telescope:
+
+```
+import cPickle
+with open('NG15yr.pta', 'rb') as f:
+    pta = cPickle.load(f)
+j1713 = pta.get_single_pulsar("J1713+0747")
+print(j1713.get_instr_keys()) # get keys for sigmas dict
+print(j1713.sigmas["AO_430_Lwide_logain"])
+```
+
+To see which non-Arecibo telescope is best for each pulsar
+
+```
+import cPickle
+with open('NG15yr.pta', 'rb') as f:
+    pta = cPickle.load(f)
+print(pta.best_sigma(exclude="AO"))
+```
+
