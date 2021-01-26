@@ -104,7 +104,7 @@ if __name__ == '__main__':
     """ 'Main' function; calculate sigmas for multiple telescope configs"""
     with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
-    # AO L-S
+    print('Timing AO L-S')
     Lband_nus = np.linspace(1.44 - .618 / 2, 1.44 + .618 / 2, 55 + 1)[:-1]
     Shi_nus = np.linspace(2.227 - .354 / 2, 2.227 + .354 / 2, 30 + 1)[:-1]
     Slo_nus = np.linspace(1.79 - .180 / 2, 1.79 + .180 / 2, 15 + 1)[:-1]
@@ -118,7 +118,7 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
 
-    # AO 430-L
+    print('Timing AO 430-L')
     nus_ao430 = np.linspace(.432 - .02 / 2, .432 + .02 / 2, 10 + 1)[:-1]
     nus_aoL = np.linspace(1.44 - .58 / 2, 1.44 + .58 / 2, 90 + 1)[:-1]
     ao430L_nus = np.concatenate([nus_ao430, nus_aoL])
@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
     
-    # GB 800-1200
+    print('Timing GB 800-1200')
     nus_gb800 = np.linspace(.820 - .200 / 2, .820 + .200 / 2, 20 + 1)[:-1]
     nus_gb1_2 = np.linspace(1.510 - .800 / 2, 1.510 + .800 / 2, 80 + 1)[:-1]
     gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
@@ -144,7 +144,7 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
 
-    # GBT-L + VLA-S
+    print('Timing GBT-L + VLA-S')
     vlaS_nus = np.linspace(3. - 2. / 2., 3. + 2. / 2., 50 + 1)[:-1]
     gbL_vlaS_nus = np.concatenate([nus_gb1_2, vlaS_nus])
     calc_timing(pta,
@@ -156,6 +156,41 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
 
-    
+    print('Timing CHIME + GBT-L')
+    chime_nus = np.linspace(0.6 - 0.4 / 2., 0.6 + 0.4 / 2., 50 + 1)[:-1]
+    chime_gbtL_nus = np.concatenate([chime_nus, nus_gb1_2])
+    chime_gbtL_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(nus_gb1_2), 0.)])
+    chime_gbtL_timefac = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(nus_gb1_2), 0.)])
+    calc_timing(pta,
+                chime_gbtL_nus,
+                rxspecfile="CHIME-GBTL_logain.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel='cos',
+                gainexp=chime_gbtL_gainexp,
+                timefac=chime_gbtL_timefac)
+
+    print('Timing CHIME + UWBR')
+    gbuwb_ctrfreq = 2.35 #GHz
+    gbuwb_bw = 3.3 # GHz
+    gbuwb_nus = np.linspace(gbuwb_ctrfreq - gbuwb_bw / 2,
+                            gbuwb_ctrfreq + gbuwb_bw / 2,
+                            100 + 1)[:-1]
+    chime_uwbr_nus = np.concatenate([chime_nus, gbuwb_nus])
+    chime_uwbr_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gbuwb_nus), 0.)])
+    chime_uwbr_timefac = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gbuwb_nus), 0.)])
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="CHIME-GBTUWBR.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
     with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
