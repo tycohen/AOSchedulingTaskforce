@@ -13,7 +13,8 @@ def calc_timing(pta,
                 dec_lim=None,
                 lat=None,
                 gainmodel=None,
-                gainexp=None):
+                gainexp=None,
+                timefac=0.):
     if rxspecfile is None:
         raise ValueError('rxspecfile must be defined')
     for p in pta.psrlist:
@@ -22,20 +23,34 @@ def calc_timing(pta,
                           lat=lat,
                           gainmodel=gainmodel,
                           gainexp=gainexp)
+        scope.timefac = timefac
         ra_str = p.name[1:3] + 'h' + p.name[3:5] + 'm' # get RA from Jname
         j2k_coords = SkyCoord(ra=ra_str, dec=p.dec*u.deg, frame='icrs')
-        scope_noise = fop.TelescopeNoise(1.,
-                                         1.,
-                                         T=t_int,
-                                         rxspecfile=rxspecfile)
-        scope_noise.Gains = oops.get_gains(scope,
-                                           p.dec,
-                                           scope_noise.get_gain(nus))
-        if 0. in scope_noise.Gains:
+        # initial scope noise to get the rx specs
+        scope_noise_init = fop.TelescopeNoise(1.,
+                                              1.,
+                                              T=t_int,
+                                              rxspecfile=rxspecfile)
+        scope_noise_init.gain = oops.get_gains(scope,
+                                               p.dec,
+                                               scope_noise_init.get_gain(nus))
+        if 0. in scope_noise_init.gain:
             # if any gains are zero, psr below at least 1 scopes horizon
             p.add_sigmas(scope.name, (-2, -2, -2, -2, -2))
             continue
         else:
+            if isinstance(timefac, np.ndarray):
+                scope_noise_init.T = get_tobs(scope_noise_init.get_T(nus),
+                                         scope,
+                                         p.dec)
+            else:
+                scope_noise_init.T = scope_noise_init.get_T(nus)
+            # re-initialize telescope noise with dec-dependent gains, int time
+            scope_noise = fop.TelescopeNoise(rx_nu=nus,
+                                             gain=scope_noise_init.gain,
+                                             T_rx=scope_noise_init.get_T_rx(nus),
+                                             epsilon=scope_noise_init.get_epsilon(nus),
+                                             T=scope_noise_init.T)
             pulsar_noise = fop.PulsarNoise('', 
                                            alpha=p.spindex,
                                            dtd=p.dtd,
@@ -49,7 +64,7 @@ def calc_timing(pta,
                                            Weffs=p.weff,
                                            W50s=p.w50,
                                            Uscale=p.uscale,
-                                           sigma_Js=p.sigma_jitter(scope_noise.get_T(nus)),
+                                           sigma_Js=p.sigma_jitter(scope_noise.T),
                                            glon=j2k_coords.galactic.b.degree,
                                            glat=j2k_coords.galactic.l.degree)
             gal_noise = fop.GalacticNoise()
@@ -64,7 +79,19 @@ def calc_timing(pta,
             p.add_sigmas(scope.name, sigma_tup)
     return
 
-#def get_tobs(scope,):
+def get_tobs(t0, scope, psr_dec, horiz=0.):
+    if abs(psr_dec - scope.lat) >= 90. - horiz:
+        # source never rises
+        if isinstance(t0, (list, np.ndarray)): 
+            return np.zeros(len(t0))
+        elif isinstance(t0, (int, float)):
+            return 0.
+    elif abs(psr_dec + scope.lat) >= 90. + horiz:
+        # source never sets
+        t_obs = t0 * (2 * np.cos(np.radians(psr_dec)) ** -1) ** scope.timefac
+    else:
+        t_obs = t0 * (np.cos(np.radians(psr_dec)) ** -1) ** scope.timefac
+    return t_obs
 
 def get_ctrfreq(nus):
     mid = float(len(nus)) / 2
