@@ -10,7 +10,7 @@ Code used to aggregate pulsar parameters and estimate the TOA uncertainty refere
 * CHIME & GBT L-band
 * CHIME & GBT UWBR
 
-NG15yr_totRMS.txt contains the total RMS for each pulsar at each telescope.
+NG15yr_totRMS.txt contains the total RMS for each pulsar at each telescope. See Example Usage to get individual noise components.
 
 ## 15yr_psrs.txt
 
@@ -44,15 +44,10 @@ Class to store an individual 15-yr pulsar
 ### Attributes: 
 
 * `name` : string
-
          pulsar name
-	 
 * `period` : float
-
          pulse period in seconds
-		
 * `dm` : float
-
            dispersion measure in pc cm^-3
 	   
 * `dec` : float
