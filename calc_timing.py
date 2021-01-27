@@ -6,6 +6,9 @@ import frequencyoptimizer as fop
 from PTAOptimizer.telescope import Telescope
 import PTAOptimizer.observatory_ops as oops
 
+from pta import PTA
+import matplotlib.pyplot as plt
+
 def calc_timing(pta,
                 nus,
                 rxspecfile=None,
@@ -45,6 +48,10 @@ def calc_timing(pta,
                                          p.dec)
             else:
                 scope_noise_init.T = scope_noise_init.get_T(nus)
+            if 0. in scope_noise_init.T:
+                print('Zero in scope_noise_init.T : {}'.format(scope_noise_init.T))
+                print('Gain = {}'.format(scope_noise_init.gain))
+
             # re-initialize telescope noise with dec-dependent gains, int time
             scope_noise = fop.TelescopeNoise(rx_nu=nus,
                                              gain=scope_noise_init.gain,
@@ -52,7 +59,7 @@ def calc_timing(pta,
                                              epsilon=scope_noise_init.get_epsilon(nus),
                                              T=scope_noise_init.T)
             pulsar_noise = fop.PulsarNoise('', 
-                                           alpha=p.spindex,
+                                           alpha=-1 * p.spindex,
                                            dtd=p.dtd,
                                            dnud=p.dnud,
                                            taud=p.taud,
@@ -79,19 +86,19 @@ def calc_timing(pta,
             p.add_sigmas(scope.name, sigma_tup)
     return
 
-def get_tobs(t0, scope, psr_dec, horiz=0.):
+def get_tobs(t0, scope, psr_dec, horiz=0., cutoff=1.08e5):
     if abs(psr_dec - scope.lat) >= 90. - horiz:
         # source never rises
         if isinstance(t0, (list, np.ndarray)): 
-            return np.zeros(len(t0))
+            t_obs = np.zeros(len(t0))
         elif isinstance(t0, (int, float)):
-            return 0.
+            t_obs = 0.
     elif abs(psr_dec + scope.lat) >= 90. + horiz:
         # source never sets
         t_obs = t0 * (2 * np.cos(np.radians(psr_dec)) ** -1) ** scope.timefac
     else:
         t_obs = t0 * (np.cos(np.radians(psr_dec)) ** -1) ** scope.timefac
-    return t_obs
+    return np.clip(t_obs, 0., cutoff)
 
 def get_ctrfreq(nus):
     mid = float(len(nus)) / 2
