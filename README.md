@@ -218,11 +218,19 @@ list of pulsar.Pulsar objects
 
 return pulsar.Pulsar object whose name matches 'psr_name'
 
-`sigma_best(self, exclude="*")`
+`sigma_best(self, exclude=[])`
 
 Get the best instrument for each pulsar
 and return list of tuples of (pulsar name, instrument, sigma_tot)
-Set exclude = string to ignore a particular telescope
+
+<ins>Parameters</ins>
+
+`exclude` : list (optional, default = [])
+
+list of telescope name substrings to exclude when sorting RMS's
+
+
+
 
 `write_to_text(self, filename)`
 
@@ -248,6 +256,6 @@ To see which non-Arecibo telescope is best for each pulsar
 import cPickle
 with open('NG15yr.pta', 'rb') as f:
     pta = cPickle.load(f)
-print(pta.best_sigma(exclude="AO"))
+print(pta.best_sigma(exclude=["AO"]))
 ```
 
