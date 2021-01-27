@@ -10,6 +10,7 @@ Code used to aggregate pulsar parameters and estimate the TOA uncertainty refere
 * CHIME & GBT L-band
 * CHIME & GBT UWBR
 
+
 NG15yr_totRMS.txt contains the total RMS for each pulsar at each telescope, assuming 30 min integration time per band per epoch, except at CHIME where the integration time is dec-dependent and at most 30 hours / epoch. Total noise can be scaled to different integration time using the individual noise components. See **Example Usage** to get individual noise components.
 
 ## tl;dr
