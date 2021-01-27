@@ -11,7 +11,7 @@ class PTA(object):
         """
     def __init__(self,
                  name=None,
-                 psrlist=None,
+                 psrlist=[],
                  *args,
                  **kwargs):
         """
@@ -19,11 +19,11 @@ class PTA(object):
         """
 
         self.name = name
-        self.psrlist = []
+        self.psrlist = psrlist
 
     def get_single_pulsar(self, psr_name):
         """return pulsar.Pulsar object whose name matches 'psr_name'
-        if no match, returns None"""
+        """
         for p in self.psrlist:
             if p.name == psr_name:
                 return p
@@ -45,6 +45,7 @@ class PTA(object):
             best_instr_list.append(best_tup)
         return best_instr_list
 
+    
 
     def write_to_txt(self, filename):
         """Write total RMS for each pulsar at each instrument to file"""
