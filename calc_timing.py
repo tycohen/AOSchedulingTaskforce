@@ -170,8 +170,8 @@ if __name__ == '__main__':
     calc_timing(pta,
                 chime_gbtL_nus,
                 rxspecfile="CHIME-GBTL_logain.txt",
-                dec_lim=(90., -46.),
-                lat=38.42,
+                dec_lim=(90., -20.),
+                lat=49.32,
                 gainmodel='cos',
                 gainexp=chime_gbtL_gainexp,
                 timefac=chime_gbtL_timefac)
@@ -192,8 +192,8 @@ if __name__ == '__main__':
     calc_timing(pta,
                 chime_uwbr_nus,
                 rxspecfile="CHIME-GBTUWBR.txt",
-                dec_lim=(90., -46.),
-                lat=38.42,
+                dec_lim=(90., -20.),
+                lat=49.32,
                 gainmodel='cos',
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
