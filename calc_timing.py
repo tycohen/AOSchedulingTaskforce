@@ -132,6 +132,9 @@ if __name__ == '__main__':
     """ 'Main' function; calculate sigmas for multiple telescope configs"""
     with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
+    for p in pta.psrlist: # reset sigma dicts (no full-gain CHIME)
+        p.sigmas = {}
+    print(pta.psrlist[0].get_instr_keys())
     print('Timing AO L-S')
     LbandSlo_nus = np.arange(1.44 - .618 / 2, 1.868, 0.011)
     Shi_nus = np.arange(2.227 - .354 / 2, 2.227 + .354 / 2, 0.01)[:-1]
@@ -192,7 +195,7 @@ if __name__ == '__main__':
                                          np.full(len(nus_gb1_2), 0.)])
     calc_timing(pta,
                 chime_gbtL_nus,
-                rxspecfile="CHIME-GBTL_logain.txt",
+                rxspecfile="CHIME-GBTL_evenlowergain.txt",
                 dec_lim=(90., -20.),
                 lat=49.32,
                 gainmodel='cos',
@@ -214,12 +217,12 @@ if __name__ == '__main__':
                                          np.full(len(gbuwb_nus), 0.)])
     calc_timing(pta,
                 chime_uwbr_nus,
-                rxspecfile="CHIME-GBTUWBR.txt",
+                rxspecfile="CHIME-GBTUWBR_evenlowergain.txt",
                 dec_lim=(90., -20.),
                 lat=49.32,
                 gainmodel='cos',
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
 
-    with open('NG15yr.pta', 'wb') as ptaf:
+    with open('NG15yr_CHIMEhalfGain.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
