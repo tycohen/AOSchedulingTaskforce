@@ -105,6 +105,29 @@ def get_ctrfreq(nus):
     else:
         return (nus[int(mid)] + nus[int(mid - 1)]) / 2.
 
+def chime_only(write=False):
+    """Returns a CHIME-only pta.PTA object"""
+    with open('NG15yr.pta', 'rb') as ptaf:
+        pta = cPickle.load(ptaf)
+    for p in pta.psrlist:   # reset the sigma dicts to being empty
+        p.sigmas = {}
+    print('Timing CHIME')
+    chime_nus = np.arange(0.6 - 0.4 / 2., 0.6 + 0.4 / 2., 0.005)[:-1]
+    chime_gainexp = np.full(len(chime_nus), 1.)
+    chime_timefac = np.full(len(chime_nus), 1.)
+    calc_timing(pta,
+                chime_nus,
+                rxspecfile="CHIME.txt",
+                dec_lim=(90., -35.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_gainexp,
+                timefac=chime_timefac)
+    if write:
+        with open('NG15yr_CHIMEonly.pta', 'wb') as ptaf:
+            cPickle.dump(pta, ptaf)
+    return pta
+    
 if __name__ == '__main__':
     """ 'Main' function; calculate sigmas for multiple telescope configs"""
     with open('NG15yr.pta', 'rb') as ptaf:
