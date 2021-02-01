@@ -62,7 +62,8 @@ def get_DM():
     for name in df['name']:
         parfile = get_parfile(name)
         if parfile is None:
-            dm = np.nan
+            dms.append(np.nan)
+            continue
         with open(parfile, 'r') as f:
             for line in f:
                 matches = re.match('DM\s+', line)
@@ -132,6 +133,16 @@ def get_dec():
     return decs
 
 def get_ne2001_pars(df):
+    """
+    Read NE2001 params from pyne2001 dict
+    Parameters
+    ----------
+    df : pandas.DataFrame
+
+    Returns
+    -------
+    dtds, dnuds, tauds, dists
+    """
     ne2001_dict = ne2001_15y.ne2001_results
     dtds = []
     dnuds = []
