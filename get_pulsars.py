@@ -36,6 +36,7 @@ def write_df_to_txt(df):
     df.to_csv('15yr_psrs.txt',
               sep='\t',
               index=False)
+    df.rename(columns={'#name': 'name'}, inplace=True)
     return
 
 def get_period():
@@ -166,6 +167,12 @@ def get_flux_spindex(df):
         if n == "J1910+1256":
             flux = 0.98
             spindex = -1.66
+        elif n == "J1911-1114":
+            flux = 1.3
+            spindex = -2.9
+        elif n == "J0437-4715":
+            flux = 210.
+            spindex = -1.0
         elif n not in names:
             flux = np.nan
             spindex = np.nan
@@ -278,6 +285,23 @@ def get_template(name):
             return temppath[0]
     print("No parfile for {}".format(name))
     return None
+
+def update_column(df, psrname, col_name, col_val):
+    """
+    Update (in-place) column value for a pulsar 
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+    psrname : str
+              pulsar name
+    col_name : str
+               name of column to update with value
+    col_val : float
+              value to update column with
+    """
+    df.loc[df["name"] == psrname, [col_name]] = col_val
+    return
 
 def drop_pulsar(name, df):
     return df[~df['name'].isin([name])]
