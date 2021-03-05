@@ -210,6 +210,11 @@ def get_flux_spindex(df):
         
 
 def get_template_pars(df):
+    """
+    Returns
+    -------
+    weffs, uscales, w50s
+    """
     weffs = []
     uscales = []
     w50s = []
@@ -294,7 +299,7 @@ def get_template(name):
                                                                   b.upper())))
         if len(temppath) > 0:
             return temppath[0]
-    print("No parfile for {}".format(name))
+    print("No template for {}".format(name))
     return None
 
 def update_column(df, psrname, col_name, col_val):
