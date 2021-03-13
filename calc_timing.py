@@ -129,7 +129,10 @@ def chime_only(write=False):
     return pta
     
 if __name__ == '__main__':
-    """ 'Main' function; calculate sigmas for multiple telescope configs"""
+    """
+    'Main' function; calculate sigmas for multiple telescope configs
+    and writes out to .pta file. File is overwritten each time.
+    """
     with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
     print('Timing AO L-S')
@@ -220,6 +223,65 @@ if __name__ == '__main__':
                 gainmodel='cos',
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
+
+    print('Timing GB140ft 400-800 MHz')
+    gb140lo_nus = np.arange(.4, .8, .009)
+    calc_timing(pta,
+                gb140lo_nus,
+                rxspecfile="GB140_400-800.txt",
+                t_int=1.08e5,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing GB140ft 1.3-1.8 GHz')
+    gb140L_nus = np.arange(1.3, 1.8, .009)
+    calc_timing(pta,
+                gb140L_nus,
+                rxspecfile="GB140_LBand.txt",
+                t_int=1.08e5,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing CHIME + GB140ft L-band')
+    chime_gb140L_nus = np.concatenate([chime_nus,
+                                       gb140L_nus])
+    chime_gb140L_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gb140L_nus), 0.)])
+    chime_gb140L_timefac = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gb140L_nus), 0.)])
+    calc_timing(pta,
+                chime_gb140L_nus,
+                rxspecfile="CHIME-GB140Lband_logain.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_gb140L_gainexp,
+                timefac=chime_gb140L_timefac)
+
+    print('Timing GB140ft 400-800 MHz + GBT-L')
+    gb140lo_gbtL_nus = np.concatenate([gb140lo_nus, nus_gb1_2])
+    calc_timing(pta,
+                gb140lo_gbtL_nus,
+                rxspecfile="GB140_400-800_GBTLband.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing GB140ft 400-800 MHz + UWBR')
+    gb140lo_uwbr_nus = np.concatenate([gb140lo_nus[gb140lo_nus < gbuwb_nus[0]],
+                                       gbuwb_nus])
+    calc_timing(pta,
+                gb140lo_uwbr_nus,
+                rxspecfile="GB140_400-800_GBTUWBR.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
     with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
