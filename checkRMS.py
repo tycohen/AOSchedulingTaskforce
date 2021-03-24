@@ -40,19 +40,22 @@ class RMSPlotter(object):
                                                         self.ptafile,
                                                         instr_keys))
         return
-        
+
     def plot_vs(self, x_rcvr, y_rcvr, sigma_key="sigma_tot", save=False):
         self.check_rcvr_keys(x_rcvr, y_rcvr)
-        self.psrnames = [p.name for p in self.pta.psrlist]
-        x_tot_rms = np.array([p.sigmas[x_rcvr][sigma_key] for p in self.pta.psrlist])
-        y_tot_rms = np.array([p.sigmas[y_rcvr][sigma_key] for p in self.pta.psrlist])
-        j1713x = np.array([p.sigmas[x_rcvr][sigma_key] for p in self.pta.psrlist
+        detected = [p for p in self.pta.psrlist if p.detected(only=[x_rcvr, y_rcvr])]
+        self.psrnames = [p.name for p in detected]
+        x_tot_rms = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected])
+        y_tot_rms = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected])
+        j1713x = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected
                            if p.name.startswith("J1713+0747")])
-        j1713y = np.array([p.sigmas[y_rcvr][sigma_key] for p in self.pta.psrlist
+        j1713y = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected
                            if p.name.startswith("J1713+0747")])
 
         self.fig = plt.figure(figsize=(12, 8))
         self.ax = plt.subplot(111)
+        plt.ion()
+        plt.show()
         self.ax.set_title("{} vs {}".format(x_rcvr.strip("_logain"),
                                        y_rcvr.strip("_logain")))
         self.ax.set_ylabel("{} / {}".format(x_rcvr.strip("_logain"),
@@ -88,25 +91,86 @@ class RMSPlotter(object):
             plt.savefig(savepath)
             
         self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
-        plt.show()    
+        plt.draw()
+        plt.pause(0.001)
         return
-
-    def plot_vs_scattering(self, x_rcvr, y_rcvr, sigma_key='sigma_tot',
-                           save=False):
+    
+    def plot_vs_dec(self, x_rcvr, y_rcvr, sigma_key='sigma_tot',
+                    save=False):
         self.check_rcvr_keys(x_rcvr, y_rcvr)
-        self.psrnames = [p.name for p in self.pta.psrlist]
-        x_tot_rms = np.array([p.sigmas[x_rcvr][sigma_key] for p in self.pta.psrlist])
-        y_tot_rms = np.array([p.sigmas[y_rcvr][sigma_key] for p in self.pta.psrlist])
-        t_scatter = np.array([p.taud for p in self.pta.psrlist])
-        j1713x = np.array([p.sigmas[x_rcvr][sigma_key] for p in self.pta.psrlist
+        detected = [p for p in self.pta.psrlist if p.detected(only=[x_rcvr, y_rcvr])]
+        self.psrnames = [p.name for p in detected]
+        x_tot_rms = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected])
+        y_tot_rms = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected])
+        decs = np.array([p.dec for p in detected])
+        j1713x = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected
                            if p.name.startswith("J1713+0747")])
-        j1713y = np.array([p.sigmas[y_rcvr][sigma_key] for p in self.pta.psrlist
+        j1713y = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected
                            if p.name.startswith("J1713+0747")])
-        j1713_scatter = np.array([p.taud for p in self.pta.psrlist
+        j1713_dec = np.array([p.dec for p in detected
                                   if p.name.startswith("J1713+0747")])
 
         self.fig = plt.figure(figsize=(12, 8))
         self.ax = plt.subplot(111)
+        plt.ion()
+        plt.show()
+        self.ax.set_title("{} & {} ({}) vs dec".format(x_rcvr.strip("_logain"),
+                                                       y_rcvr.strip("_logain"),
+                                                       sigma_key))
+        self.ax.set_ylabel(r"$\sigma$ ({}) / $\sigma$ ({})".format(x_rcvr.strip("_logain"),
+                                                              y_rcvr.strip("_logain")))
+        self.ax.set_xlabel(r"$\mathrm{dec\ (deg)}$")
+        self.ax.axhline(1., color="black", ls=":")
+#        self.ax.set_ylim([0, 5])
+        self.scatter = self.ax.scatter(decs, x_tot_rms / y_tot_rms,
+                                       marker='x')
+        self.ax.plot(j1713_dec, j1713x / j1713y,
+                     'o', markersize=12, color="orange",
+                     fillstyle="none", label="J1713+0747")
+        self.ax.legend(loc="upper right")
+        self.ax.grid()
+        self.annot = self.ax.annotate("", xy=(0,0), xytext=(20, 20),
+                                      textcoords="offset points",
+                                      bbox=dict(boxstyle="round", fc="w"))
+        self.annot.set_visible(False)
+
+        print("Above dashed line is better with {}".format(y_rcvr))
+
+        if save:
+            if not os.path.exists("plots"):
+                warnings.warn("./plots dir does not exist. Creating.")
+                os.mkdir("./plots")
+            filename = "{}_{}_and_{}_{}_vs_dec.png".format(self.ptafile.strip(".pta"),
+                                                           x_rcvr.strip("_logain"),
+                                                           y_rcvr.strip("_logain"),
+                                                           sigma_key)
+            savepath = os.path.join("./plots", filename)
+            plt.savefig(savepath)
+            
+        self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
+        plt.draw()
+        plt.pause(0.001)
+        return        
+
+    def plot_vs_scattering(self, x_rcvr, y_rcvr, sigma_key='sigma_tot',
+                           save=False):
+        self.check_rcvr_keys(x_rcvr, y_rcvr)
+        detected = [p for p in self.pta.psrlist if p.detected(only=[x_rcvr, y_rcvr])]
+        self.psrnames = [p.name for p in detected]
+        x_tot_rms = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected])
+        y_tot_rms = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected])
+        t_scatter = np.array([p.taud for p in detected])
+        j1713x = np.array([p.sigmas[x_rcvr][sigma_key] for p in detected
+                           if p.name.startswith("J1713+0747")])
+        j1713y = np.array([p.sigmas[y_rcvr][sigma_key] for p in detected
+                           if p.name.startswith("J1713+0747")])
+        j1713_scatter = np.array([p.taud for p in detected
+                                  if p.name.startswith("J1713+0747")])
+
+        self.fig = plt.figure(figsize=(12, 8))
+        self.ax = plt.subplot(111)
+        plt.ion()
+        plt.show()
         self.ax.set_title("{} & {} vs scattering time".format(x_rcvr.strip("_logain"),
                                                          y_rcvr.strip("_logain")))
         self.ax.set_ylabel(r"$\sigma$ ({}) / $\sigma$ ({})".format(x_rcvr.strip("_logain"),
@@ -133,7 +197,7 @@ class RMSPlotter(object):
             if not os.path.exists("plots"):
                 warnings.warn("./plots dir does not exist. Creating.")
                 os.mkdir("./plots")
-            filename = "{}_{}_and_{}_{}_vs_scatter.png".format(ptafile.strip(".pta"),
+            filename = "{}_{}_and_{}_{}_vs_scatter.png".format(self.ptafile.strip(".pta"),
                                                                x_rcvr.strip("_logain"),
                                                                y_rcvr.strip("_logain"),
                                                                sigma_key)
@@ -141,7 +205,8 @@ class RMSPlotter(object):
             plt.savefig(savepath)
             
         self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
-        plt.show()    
+        plt.draw()
+        plt.pause(0.001)
         return        
 
     

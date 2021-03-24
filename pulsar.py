@@ -97,3 +97,23 @@ class Pulsar(object):
 
     def get_instr_keys(self):
         return [k for k in self.sigmas]
+
+    def detected(self, only=None):
+        """
+        Is the pulsar is detected by at least of one of the telescopes?
+        
+        Parameters
+        ----------
+        only : None or list (optional)
+                list of receiver keys to only check if not None
+
+        Returns
+        -------
+        bool
+        """
+        if only is None:
+            rcvrs = self.get_instr_keys()
+        else:
+            rcvrs = only
+        return all([self.sigmas[r]["sigma_tot"] > 0 for r in rcvrs])
+        
