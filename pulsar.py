@@ -100,7 +100,7 @@ class Pulsar(object):
 
     def detected(self, only=None):
         """
-        Is the pulsar is detected by at least of one of the telescopes?
+        Is the pulsar is detected by every telescope?
         
         Parameters
         ----------

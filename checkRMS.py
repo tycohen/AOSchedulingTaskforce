@@ -5,7 +5,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 class RMSPlotter(object):
-
+    """
+    Main Plotting Class
+    
+    Attributes
+    ----------
+    ptafile : str
+            path to pickled .pta file (Default ./NG15yr.pta)
+    """
+    
     def __init__(self,
                  ptafile='NG15yr.pta',
                  psrnames=None,
@@ -28,17 +36,18 @@ class RMSPlotter(object):
         self.scatter = scatter
 
     def check_rcvr_keys(self, x_rcvr, y_rcvr):
+        """Check if receiver/telescope system in .pta file"""
         instr_keys = self.pta.psrlist[0].get_instr_keys()
         if not x_rcvr in instr_keys:
             raise ValueError("x_rcvr={} not a valid instr_key in {}.\n"
                              "Valid keys are:\n{}.".format(x_rcvr,
                                                          self.ptafile,
-                                                         instr_keys))
+                                                           "\n".join(instr_keys)))
         if not y_rcvr in instr_keys:
             raise ValueError("y_rcvr={} not a valid instr_key in {}.\n"
                              "Valid keys are:\n{}".format(y_rcvr,
-                                                        self.ptafile,
-                                                        instr_keys))
+                                                          self.ptafile,
+                                                          "\n".join(instr_keys)))
         return
 
     def plot_vs(self, x_rcvr, y_rcvr, sigma_key="sigma_tot", save=False):
@@ -88,6 +97,7 @@ class RMSPlotter(object):
                 warnings.warn("./plots dir does not exist. Creating.")
                 os.mkdir("./plots")
             savepath = os.path.join("./plots", filename)
+            print("Saved ./plots/{}".format(filename))
             plt.savefig(savepath)
             
         self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
@@ -146,6 +156,7 @@ class RMSPlotter(object):
                                                            sigma_key)
             savepath = os.path.join("./plots", filename)
             plt.savefig(savepath)
+            print("Saved ./plots/{}".format(filename))
             
         self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
         plt.draw()
