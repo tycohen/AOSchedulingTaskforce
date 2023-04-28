@@ -1,5 +1,6 @@
 import cPickle
 import numpy as np
+from os import path
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 import frequencyoptimizer as fop
@@ -19,7 +20,7 @@ def calc_timing(pta,
     if rxspecfile is None:
         raise ValueError('rxspecfile must be defined')
     for p in pta.psrlist:
-        scope = Telescope(name=rxspecfile.strip(".txt"),
+        scope = Telescope(name=path.basename(rxspecfile).strip(".txt"),
                           dec_lim=dec_lim,
                           lat=lat,
                           gainmodel=gainmodel,
