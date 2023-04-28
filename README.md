@@ -259,6 +259,6 @@ To see which non-Arecibo telescope is best for each pulsar
 import cPickle
 with open('NG15yr.pta', 'rb') as f:
     pta = cPickle.load(f)
-print(pta.best_sigma(exclude=["AO"]))
+print(pta.sigma_best(exclude=["AO"]))
 ```
 
