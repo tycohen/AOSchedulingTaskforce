@@ -225,10 +225,50 @@ if __name__ == '__main__':
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
 
+    print('Timing CHIME + UWBR improved (no excess noise)')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoExcNoise.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
+    print('Timing CHIME + UWBR pessimistic (with excess noise)')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_WithExcNoise.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
     print('Timing UWBR')
     calc_timing(pta,
                 gbuwb_nus,
                 rxspecfile="./uwbr_rxspecs/GBTUWBR.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing UWBR improved (no excess noise)')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoExcNoise.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing UWBR pessimistic (with excess noise)')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_WithExcNoise.txt",
                 t_int=1800.,
                 dec_lim=(90., -46.),
                 lat=38.42,
