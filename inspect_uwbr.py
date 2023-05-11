@@ -46,7 +46,7 @@ def prepare_rxspecfiles():
         outf.write("# Hacky CHIME F-Engine + GBT UWBR pessimistic"
                    " with excess rcvr noise" + chime_str)
         for f,t,g in zip(xfreq, xtrx, xgain):
-            fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+            fstr += "{}\t{}\t{}\t0.01\t3600.\n".format(f / 1000.,t,g)
         outf.write(fstr)
 
     fstr = ""
@@ -54,7 +54,7 @@ def prepare_rxspecfiles():
         outf.write("# Hacky CHIME F-Engine + GBT UWBR with no "
                    "excess receiver noise" + chime_str)
         for f,t,g in zip(noxfreq, noxtrx, noxgain):
-            fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+            fstr += "{}\t{}\t{}\t0.01\t3600.\n".format(f / 1000.,t,g)
         outf.write(fstr)
         
     fstr = ""
