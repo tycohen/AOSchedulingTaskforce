@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 freq, trx, gain = np.loadtxt("uwbr_rxspecs/November_2023_specs_nozap.txt", unpack=True) 
 xfreq, xtrx, xgain = np.loadtxt("uwbr_rxspecs/Predicted_Specs_With_Excess_Improved_Gain.txt", unpack=True)
 noxfreq, noxtrx, noxgain = np.loadtxt("uwbr_rxspecs/Predicted_Specs_No_Excess_Improved_Gain.txt", unpack=True)
+may23freq, may23trx, may23gain = np.loadtxt("uwbr_rxspecs/Ryan_UWBR_May_2023_cone_no_RFI.csv", unpack=True, delimiter=",")
 
 def plot_current_v_target(save=False):
     fig, ax = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
@@ -50,6 +51,16 @@ def prepare_rxspecfiles():
         outf.write(fstr)
 
     fstr = ""
+    with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23.txt", "wb") as outf:
+        outf.write("# Hacky CHIME F-Engine + GBT UWBR"
+                   " with no RFI - Ryan Lynch 6/2/23" + chime_str)
+        for f,t,g in zip(may23freq[::-1],
+                         may23trx[::-1],
+                         may23gain[::-1]):
+            fstr += "{}\t{}\t{}\t0.01\t3600.\n".format(f / 1000.,t,g)
+        outf.write(fstr)
+
+    fstr = ""
     with open("uwbr_rxspecs/CHIME-GBTUWBR_NoExcNoise.txt", "wb") as outf:
         outf.write("# Hacky CHIME F-Engine + GBT UWBR with no "
                    "excess receiver noise" + chime_str)
@@ -73,4 +84,14 @@ def prepare_rxspecfiles():
             fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
         outf.write(fstr)
 
+    fstr = ""
+    with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23.txt", "wb") as outf:
+        outf.write("""# GBT UWBR with no RFI - Ryan Lynch 6/2/23
+#freq	Trx	G	eps\n""")
+        for f,t,g in zip(may23freq[::-1],
+                         may23trx[::-1],
+                         may23gain[::-1]):
+            fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
+        outf.write(fstr)
+        
     return
