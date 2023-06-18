@@ -57,6 +57,7 @@ def calc_timing(pta,
                                              T_rx=scope_noise_init.get_T_rx(nus),
                                              epsilon=scope_noise_init.get_epsilon(nus),
                                              T=scope_noise_init.T)
+            p.telescope_noise.update({scope.name : scope_noise})
             pulsar_noise = fop.PulsarNoise('', 
                                            alpha=-1 * p.spindex,
                                            dtd=p.dtd,
