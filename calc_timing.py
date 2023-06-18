@@ -254,6 +254,26 @@ if __name__ == '__main__':
                 gainmodel='cos',
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
+
+    print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain)')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGain.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+    
+    print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
     
     print('Timing UWBR')
     calc_timing(pta,
@@ -294,9 +314,28 @@ if __name__ == '__main__':
                 lat=38.42,
                 gainmodel=None,
                 gainexp=None)
+
+    print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain)')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGain.txt",
+                t_int=3600.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
     
+    print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
+                t_int=3600.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
     # print('Timing GB140ft 400-800 MHz')
-    gb140lo_nus = np.arange(.4, .8, .009)
+    # gb140lo_nus = np.arange(.4, .8, .009)
     # calc_timing(pta,
     #             gb140lo_nus,
     #             rxspecfile="GB140_400-800.txt",
@@ -343,16 +382,16 @@ if __name__ == '__main__':
     #             gainmodel=None,
     #             gainexp=None)
 
-    print('Timing GB140ft 400-800 MHz + UWBR')
-    gb140lo_uwbr_nus = np.concatenate([gb140lo_nus[gb140lo_nus < gbuwb_nus[0]],
-                                       gbuwb_nus])
-    calc_timing(pta,
-                gb140lo_uwbr_nus,
-                rxspecfile="./uwbr_rxspecs/GB140_400-800_GBTUWBR.txt",
-                dec_lim=(90., -46.),
-                lat=38.42,
-                gainmodel=None,
-                gainexp=None)
+    # print('Timing GB140ft 400-800 MHz + UWBR')
+    # gb140lo_uwbr_nus = np.concatenate([gb140lo_nus[gb140lo_nus < gbuwb_nus[0]],
+    #                                    gbuwb_nus])
+    # calc_timing(pta,
+    #             gb140lo_uwbr_nus,
+    #             rxspecfile="./uwbr_rxspecs/GB140_400-800_GBTUWBR.txt",
+    #             dec_lim=(90., -46.),
+    #             lat=38.42,
+    #             gainmodel=None,
+    #             gainexp=None)
 
     with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
