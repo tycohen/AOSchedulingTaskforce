@@ -137,72 +137,72 @@ if __name__ == '__main__':
     """
     with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
-    # print('Timing AO L-S')
-    # LbandSlo_nus = np.arange(1.44 - .618 / 2, 1.868, 0.011)
-    # Shi_nus = np.arange(2.227 - .354 / 2, 2.227 + .354 / 2, 0.01)[:-1]
-    # aoLS_nus = np.sort(np.concatenate([LbandSlo_nus, Shi_nus]))
-    # calc_timing(pta,
-    #             aoLS_nus,
-    #             rxspecfile="AO_Lwide_Swide_logain.txt",
-    #             dec_lim=(39., 0.),
-    #             t_int=1800.,
-    #             lat=18.44,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing AO L-S')
+    LbandSlo_nus = np.arange(1.44 - .618 / 2, 1.868, 0.011)
+    Shi_nus = np.arange(2.227 - .354 / 2, 2.227 + .354 / 2, 0.01)[:-1]
+    aoLS_nus = np.sort(np.concatenate([LbandSlo_nus, Shi_nus]))
+    calc_timing(pta,
+                aoLS_nus,
+                rxspecfile="AO_Lwide_Swide_logain.txt",
+                dec_lim=(39., 0.),
+                t_int=1800.,
+                lat=18.44,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing AO 430-L')
-    # nus_ao430 = np.arange(.432 - .02 / 2, .432 + .02 / 2, 0.00125)[:-1]
-    # nus_aoL = np.arange(1.44 - .58 / 2, 1.44 + .58 / 2, 0.00125)[:-1]
-    # ao430L_nus = np.concatenate([nus_ao430, nus_aoL])
-    # calc_timing(pta,
-    #             ao430L_nus,
-    #             rxspecfile="AO_430_Lwide_logain.txt",
-    #             t_int=1800.,
-    #             dec_lim=(39., 0.),
-    #             lat=18.44,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing AO 430-L')
+    nus_ao430 = np.arange(.432 - .02 / 2, .432 + .02 / 2, 0.00125)[:-1]
+    nus_aoL = np.arange(1.44 - .58 / 2, 1.44 + .58 / 2, 0.00125)[:-1]
+    ao430L_nus = np.concatenate([nus_ao430, nus_aoL])
+    calc_timing(pta,
+                ao430L_nus,
+                rxspecfile="AO_430_Lwide_logain.txt",
+                t_int=1800.,
+                dec_lim=(39., 0.),
+                lat=18.44,
+                gainmodel=None,
+                gainexp=None)
     
-    # print('Timing GB 800-1200')
-    # nus_gb800 = np.arange(.820 - .200 / 2, .820 + .200 / 2, 0.009)
-    # nus_gb1_2 = np.arange(1.510 - .800 / 2, 1.510 + .800 / 2, 0.009)[:-1]
-    # gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
-    # calc_timing(pta,
-    #             gbt80012_nus,
-    #             rxspecfile="GBT_Rcvr_800-Rcvr_1_2_logain.txt",
-    #             t_int=1800.,
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GB 800-1200')
+    nus_gb800 = np.arange(.820 - .200 / 2, .820 + .200 / 2, 0.009)
+    nus_gb1_2 = np.arange(1.510 - .800 / 2, 1.510 + .800 / 2, 0.009)[:-1]
+    gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
+    calc_timing(pta,
+                gbt80012_nus,
+                rxspecfile="GBT_Rcvr_800-Rcvr_1_2_logain.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing GBT-L + VLA-S')
-    # vlaS_nus = np.arange(3. - 2. / 2., 3. + 2. / 2., 0.009)
-    # gbL_vlaS_nus = np.concatenate([nus_gb1_2, vlaS_nus])
-    # calc_timing(pta,
-    #             gbL_vlaS_nus,
-    #             rxspecfile="GBT_Rcvr_1_2_VLAS_logain.txt",
-    #             t_int=1800.,
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GBT-L + VLA-S')
+    vlaS_nus = np.arange(3. - 2. / 2., 3. + 2. / 2., 0.009)
+    gbL_vlaS_nus = np.concatenate([nus_gb1_2, vlaS_nus])
+    calc_timing(pta,
+                gbL_vlaS_nus,
+                rxspecfile="GBT_Rcvr_1_2_VLAS_logain.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing CHIME + GBT-L')
+    print('Timing CHIME + GBT-L')
     chime_nus = np.arange(0.6 - 0.4 / 2., 0.6 + 0.4 / 2., 0.009)[:-1]
-    # chime_gbtL_nus = np.concatenate([chime_nus, nus_gb1_2])
-    # chime_gbtL_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
-    #                                      np.full(len(nus_gb1_2), 0.)])
-    # chime_gbtL_timefac = np.concatenate([np.full(len(chime_nus), 1.),
-    #                                      np.full(len(nus_gb1_2), 0.)])
-    # calc_timing(pta,
-    #             chime_gbtL_nus,
-    #             rxspecfile="CHIME-GBTL_logain.txt",
-    #             dec_lim=(90., -20.),
-    #             lat=49.32,
-    #             gainmodel='cos',
-    #             gainexp=chime_gbtL_gainexp,
-    #             timefac=chime_gbtL_timefac)
+    chime_gbtL_nus = np.concatenate([chime_nus, nus_gb1_2])
+    chime_gbtL_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(nus_gb1_2), 0.)])
+    chime_gbtL_timefac = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(nus_gb1_2), 0.)])
+    calc_timing(pta,
+                chime_gbtL_nus,
+                rxspecfile="CHIME-GBTL_logain.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_gbtL_gainexp,
+                timefac=chime_gbtL_timefac)
     
     print('Timing CHIME + UWBR')
     gbuwb_ctrfreq = 2.35 #GHz
@@ -335,64 +335,64 @@ if __name__ == '__main__':
                 lat=38.42,
                 gainmodel=None,
                 gainexp=None)
-    # print('Timing GB140ft 400-800 MHz')
-    # gb140lo_nus = np.arange(.4, .8, .009)
-    # calc_timing(pta,
-    #             gb140lo_nus,
-    #             rxspecfile="GB140_400-800.txt",
-    #             t_int=1.08e5,
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GB140ft 400-800 MHz')
+    gb140lo_nus = np.arange(.4, .8, .009)
+    calc_timing(pta,
+                gb140lo_nus,
+                rxspecfile="GB140_400-800.txt",
+                t_int=1.08e5,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing GB140ft 1.3-1.8 GHz')
-    # gb140L_nus = np.arange(1.3, 1.8, .009)
-    # calc_timing(pta,
-    #             gb140L_nus,
-    #             rxspecfile="GB140_LBand.txt",
-    #             t_int=1.08e5,
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GB140ft 1.3-1.8 GHz')
+    gb140L_nus = np.arange(1.3, 1.8, .009)
+    calc_timing(pta,
+                gb140L_nus,
+                rxspecfile="GB140_LBand.txt",
+                t_int=1.08e5,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing CHIME + GB140ft L-band')
-    # chime_gb140L_nus = np.concatenate([chime_nus,
-    #                                    gb140L_nus])
-    # chime_gb140L_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
-    #                                      np.full(len(gb140L_nus), 0.)])
-    # chime_gb140L_timefac = np.concatenate([np.full(len(chime_nus), 1.),
-    #                                      np.full(len(gb140L_nus), 0.)])
-    # calc_timing(pta,
-    #             chime_gb140L_nus,
-    #             rxspecfile="CHIME-GB140Lband_logain.txt",
-    #             dec_lim=(90., -20.),
-    #             lat=49.32,
-    #             gainmodel='cos',
-    #             gainexp=chime_gb140L_gainexp,
-    #             timefac=chime_gb140L_timefac)
+    print('Timing CHIME + GB140ft L-band')
+    chime_gb140L_nus = np.concatenate([chime_nus,
+                                       gb140L_nus])
+    chime_gb140L_gainexp = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gb140L_nus), 0.)])
+    chime_gb140L_timefac = np.concatenate([np.full(len(chime_nus), 1.),
+                                         np.full(len(gb140L_nus), 0.)])
+    calc_timing(pta,
+                chime_gb140L_nus,
+                rxspecfile="CHIME-GB140Lband_logain.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_gb140L_gainexp,
+                timefac=chime_gb140L_timefac)
 
-    # print('Timing GB140ft 400-800 MHz + GBT-L')
-    # gb140lo_gbtL_nus = np.concatenate([gb140lo_nus, nus_gb1_2])
-    # calc_timing(pta,
-    #             gb140lo_gbtL_nus,
-    #             rxspecfile="GB140_400-800_GBTLband.txt",
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GB140ft 400-800 MHz + GBT-L')
+    gb140lo_gbtL_nus = np.concatenate([gb140lo_nus, nus_gb1_2])
+    calc_timing(pta,
+                gb140lo_gbtL_nus,
+                rxspecfile="GB140_400-800_GBTLband.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
-    # print('Timing GB140ft 400-800 MHz + UWBR')
-    # gb140lo_uwbr_nus = np.concatenate([gb140lo_nus[gb140lo_nus < gbuwb_nus[0]],
-    #                                    gbuwb_nus])
-    # calc_timing(pta,
-    #             gb140lo_uwbr_nus,
-    #             rxspecfile="./uwbr_rxspecs/GB140_400-800_GBTUWBR.txt",
-    #             dec_lim=(90., -46.),
-    #             lat=38.42,
-    #             gainmodel=None,
-    #             gainexp=None)
+    print('Timing GB140ft 400-800 MHz + UWBR')
+    gb140lo_uwbr_nus = np.concatenate([gb140lo_nus[gb140lo_nus < gbuwb_nus[0]],
+                                       gbuwb_nus])
+    calc_timing(pta,
+                gb140lo_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/GB140_400-800_GBTUWBR.txt",
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
 
     with open('NG15yr.pta', 'wb') as ptaf:
         cPickle.dump(pta, ptaf)
