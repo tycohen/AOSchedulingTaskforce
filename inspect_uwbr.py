@@ -1,3 +1,4 @@
+from os import path
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -5,9 +6,9 @@ import matplotlib.pyplot as plt
 freq, trx, gain = np.loadtxt("uwbr_rxspecs/November_2023_specs_nozap.txt", unpack=True) 
 xfreq, xtrx, xgain = np.loadtxt("uwbr_rxspecs/Predicted_Specs_With_Excess_Improved_Gain.txt", unpack=True)
 noxfreq, noxtrx, noxgain = np.loadtxt("uwbr_rxspecs/Predicted_Specs_No_Excess_Improved_Gain.txt", unpack=True)
-may23freq, may23trx, may23gain = np.loadtxt("uwbr_rxspecs/Ryan_UWBR_May_2023_cone_no_RFI.csv", unpack=True, delimiter=",")
-may23freq_bettergain, may23trx_bettergain, may23gain_bettergain, __ = np.loadtxt("uwbr_rxspecs/May_2023_cone_no_RFI_Tsys_with_Improved_Gain.txt", unpack=True)
-may23freq_bettergaintsys, may23trx_bettergaintsys, may23gain_bettergaintsys, __ = np.loadtxt("uwbr_rxspecs/May_2023_cone_no_RFI_Tsys_minus_8K_with_Improved_Gain.txt", unpack=True)
+#may23freq, may23trx, may23gain = np.loadtxt("uwbr_rxspecs/Ryan_UWBR_May_2023_cone_no_RFI.csv", unpack=True, delimiter=",")
+#may23freq_bettergain, may23trx_bettergain, may23gain_bettergain, __ = np.loadtxt("uwbr_rxspecs/May_2023_cone_no_RFI_Tsys_with_Improved_Gain.txt", unpack=True)
+#may23freq_bettergaintsys, may23trx_bettergaintsys, may23gain_bettergaintsys, __ = np.loadtxt("uwbr_rxspecs/May_2023_cone_no_RFI_Tsys_minus_8K_with_Improved_Gain.txt", unpack=True)
 
 def plot_current_v_target(save=False):
     fig, ax = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
@@ -52,36 +53,36 @@ def prepare_rxspecfiles():
             fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
         outf.write(fstr)
 
-    fstr = ""
-    with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23.txt", "wb") as outf:
-        outf.write("# Hacky CHIME F-Engine + GBT UWBR"
-                   " with no RFI - Ryan Lynch 6/2/23" + chime_str)
-        for f,t,g in zip(may23freq[::-1],
-                         may23trx[::-1],
-                         may23gain[::-1]):
-            fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
-        outf.write(fstr)
+    # fstr = ""
+    # with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23.txt", "wb") as outf:
+    #     outf.write("# Hacky CHIME F-Engine + GBT UWBR"
+    #                " with no RFI - Ryan Lynch 6/2/23" + chime_str)
+    #     for f,t,g in zip(may23freq[::-1],
+    #                      may23trx[::-1],
+    #                      may23gain[::-1]):
+    #         fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+    #     outf.write(fstr)
 
-    fstr = ""
-    with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGain.txt", "wb") as outf:
-        outf.write("# Hacky CHIME F-Engine + GBT UWBR"
-                   " with no RFI, improved gain - Ryan Lynch 6/12/23" + chime_str)
-        for f,t,g in zip(may23freq_bettergain,
-                         may23trx_bettergain,
-                         may23gain_bettergain):
-            fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
-        outf.write(fstr)
+    # fstr = ""
+    # with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGain.txt", "wb") as outf:
+    #     outf.write("# Hacky CHIME F-Engine + GBT UWBR"
+    #                " with no RFI, improved gain - Ryan Lynch 6/12/23" + chime_str)
+    #     for f,t,g in zip(may23freq_bettergain,
+    #                      may23trx_bettergain,
+    #                      may23gain_bettergain):
+    #         fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+    #     outf.write(fstr)
         
-    fstr = ""
-    with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt", "wb") as outf:
-        outf.write("# Hacky CHIME F-Engine + GBT UWBR"
-                   " with no RFI, improved gain, Tsys-8K "
-                   "- Ryan Lynch 6/12/23" + chime_str)
-        for f,t,g in zip(may23freq_bettergaintsys,
-                         may23trx_bettergaintsys,
-                         may23gain_bettergaintsys):
-            fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
-        outf.write(fstr)
+    # fstr = ""
+    # with open("uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt", "wb") as outf:
+    #     outf.write("# Hacky CHIME F-Engine + GBT UWBR"
+    #                " with no RFI, improved gain, Tsys-8K "
+    #                "- Ryan Lynch 6/12/23" + chime_str)
+    #     for f,t,g in zip(may23freq_bettergaintsys,
+    #                      may23trx_bettergaintsys,
+    #                      may23gain_bettergaintsys):
+    #         fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+    #     outf.write(fstr)
     
     fstr = ""
     with open("uwbr_rxspecs/CHIME-GBTUWBR_NoExcNoise.txt", "wb") as outf:
@@ -107,34 +108,60 @@ def prepare_rxspecfiles():
             fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
         outf.write(fstr)
 
-    fstr = ""
-    with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23.txt", "wb") as outf:
-        outf.write("""# GBT UWBR with no RFI - Ryan Lynch 6/2/23
-#freq	Trx	G	eps\n""")
-        for f,t,g in zip(may23freq[::-1],
-                         may23trx[::-1],
-                         may23gain[::-1]):
-            fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
-        outf.write(fstr)
+#     fstr = ""
+#     with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23.txt", "wb") as outf:
+#         outf.write("""# GBT UWBR with no RFI - Ryan Lynch 6/2/23
+# #freq	Trx	G	eps\n""")
+#         for f,t,g in zip(may23freq[::-1],
+#                          may23trx[::-1],
+#                          may23gain[::-1]):
+#             fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
+#         outf.write(fstr)
 
-    fstr = ""
-    with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGain.txt", "wb") as outf:
-        outf.write("""# GBT UWBR with no RFI, improved gain - Ryan Lynch 6/12/23
-#freq	Trx	G	eps\n""")
-        for f,t,g in zip(may23freq_bettergain,
-                         may23trx_bettergain,
-                         may23gain_bettergain):
-            fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
-        outf.write(fstr)
+#     fstr = ""
+#     with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGain.txt", "wb") as outf:
+#         outf.write("""# GBT UWBR with no RFI, improved gain - Ryan Lynch 6/12/23
+# #freq	Trx	G	eps\n""")
+#         for f,t,g in zip(may23freq_bettergain,
+#                          may23trx_bettergain,
+#                          may23gain_bettergain):
+#             fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
+#         outf.write(fstr)
 
-    fstr = ""
-    with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt", "wb") as outf:
-        outf.write("""# GBT UWBR with no RFI, improved gain, Tsys-8K - Ryan Lynch 6/12/23
+#     fstr = ""
+#     with open("uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt", "wb") as outf:
+#         outf.write("""# GBT UWBR with no RFI, improved gain, Tsys-8K - Ryan Lynch 6/12/23
+# #freq	Trx	G	eps\n""")
+#         for f,t,g in zip(may23freq_bettergaintsys,
+#                          may23trx_bettergaintsys,
+#                          may23gain_bettergaintsys):
+#             fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
+#         outf.write(fstr)
+
+    for infile in ["uwbr_rxspecs/May_2023_Improved_Gain_No_RFI.txt",
+	           "uwbr_rxspecs/May_2023_Improved_Gain_and_Tsys_No_RFI.txt",
+	           "uwbr_rxspecs/May_2023_OnSky_No_RFI.txt",
+	           "uwbr_rxspecs/Original_Specs.txt"]:
+        rxname = path.basename(infile)
+        uwbr_fstr = ""
+        uwbrfreq, uwbrtrx, uwbrgain, __ = np.loadtxt(infile, unpack=True)
+        if uwbrfreq[0] > uwbrfreq[1]:
+            uwbrfreq = uwbrfreq[::-1]
+            uwbrtrx = uwbrtrx[::-1]
+            uwbrgain = uwbrgain[::-1]
+        with open("uwbr_rxspecs/GBTUWBR_" + rxname, "wb") as outf:
+            outf.write("""# GBT UWBR - Ryan Lynch 6/20/23
 #freq	Trx	G	eps\n""")
-        for f,t,g in zip(may23freq_bettergaintsys,
-                         may23trx_bettergaintsys,
-                         may23gain_bettergaintsys):
-            fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
-        outf.write(fstr)
+            for f,t,g in zip(uwbrfreq, uwbrtrx, uwbrgain):
+                uwbr_fstr += "{}\t{}\t{}\t0.01\n".format(f / 1000.,t,g)       
+            outf.write(uwbr_fstr)
+
+        chime_fstr = ""
+        with open("uwbr_rxspecs/CHIME-GBTUWBR_" + rxname, "wb") as outf:
+            outf.write("# Hacky CHIME F-Engine + GBT UWBR"
+                       "- Ryan Lynch 6/20/23" + chime_str)
+            for f,t,g in zip(uwbrfreq, uwbrtrx, uwbrgain):
+                chime_fstr += "{}\t{}\t{}\t0.01\t1800.\n".format(f / 1000.,t,g)
+            outf.write(chime_fstr)
         
     return

@@ -246,35 +246,35 @@ if __name__ == '__main__':
                 gainexp=chime_uwbr_gainexp,
                 timefac=chime_uwbr_timefac)
 
-    print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI)')
-    calc_timing(pta,
-                chime_uwbr_nus,
-                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23.txt",
-                dec_lim=(90., -20.),
-                lat=49.32,
-                gainmodel='cos',
-                gainexp=chime_uwbr_gainexp,
-                timefac=chime_uwbr_timefac)
+    # print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI)')
+    # calc_timing(pta,
+    #             chime_uwbr_nus,
+    #             rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23.txt",
+    #             dec_lim=(90., -20.),
+    #             lat=49.32,
+    #             gainmodel='cos',
+    #             gainexp=chime_uwbr_gainexp,
+    #             timefac=chime_uwbr_timefac)
 
-    print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain)')
-    calc_timing(pta,
-                chime_uwbr_nus,
-                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGain.txt",
-                dec_lim=(90., -20.),
-                lat=49.32,
-                gainmodel='cos',
-                gainexp=chime_uwbr_gainexp,
-                timefac=chime_uwbr_timefac)
+    # print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain)')
+    # calc_timing(pta,
+    #             chime_uwbr_nus,
+    #             rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGain.txt",
+    #             dec_lim=(90., -20.),
+    #             lat=49.32,
+    #             gainmodel='cos',
+    #             gainexp=chime_uwbr_gainexp,
+    #             timefac=chime_uwbr_timefac)
     
-    print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
-    calc_timing(pta,
-                chime_uwbr_nus,
-                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
-                dec_lim=(90., -20.),
-                lat=49.32,
-                gainmodel='cos',
-                gainexp=chime_uwbr_gainexp,
-                timefac=chime_uwbr_timefac)
+    # print('Timing CHIME + UWBR May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
+    # calc_timing(pta,
+    #             chime_uwbr_nus,
+    #             rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
+    #             dec_lim=(90., -20.),
+    #             lat=49.32,
+    #             gainmodel='cos',
+    #             gainexp=chime_uwbr_gainexp,
+    #             timefac=chime_uwbr_timefac)
     
     print('Timing UWBR')
     calc_timing(pta,
@@ -306,35 +306,116 @@ if __name__ == '__main__':
                 gainmodel=None,
                 gainexp=None)
 
-    print('Timing UWBR using May 2023 rcvr specs (no RFI)')
+    # print('Timing UWBR using May 2023 rcvr specs (no RFI)')
+    # calc_timing(pta,
+    #             gbuwb_nus,
+    #             rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23.txt",
+    #             t_int=1800.,
+    #             dec_lim=(90., -46.),
+    #             lat=38.42,
+    #             gainmodel=None,
+    #             gainexp=None)
+
+    # print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain)')
+    # calc_timing(pta,
+    #             gbuwb_nus,
+    #             rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGain.txt",
+    #             t_int=1800.,
+    #             dec_lim=(90., -46.),
+    #             lat=38.42,
+    #             gainmodel=None,
+    #             gainexp=None)
+    
+    # print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
+    # calc_timing(pta,
+    #             gbuwb_nus,
+    #             rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
+    #             t_int=1800.,
+    #             dec_lim=(90., -46.),
+    #             lat=38.42,
+    #             gainmodel=None,
+    #             gainexp=None)
+
+    print('Timing GBTUWBR_May_2023_Improved_Gain_No_RFI')
     calc_timing(pta,
                 gbuwb_nus,
-                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23.txt",
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_May_2023_Improved_Gain_No_RFI.txt",
                 t_int=1800.,
                 dec_lim=(90., -46.),
                 lat=38.42,
                 gainmodel=None,
                 gainexp=None)
 
-    print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain)')
+    print('Timing GBTUWBR_May_2023_OnSky_No_RFI')
     calc_timing(pta,
                 gbuwb_nus,
-                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGain.txt",
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_May_2023_OnSky_No_RFI.txt",
                 t_int=1800.,
                 dec_lim=(90., -46.),
                 lat=38.42,
                 gainmodel=None,
                 gainexp=None)
+
+    print('Timing GBTUWBR_May_2023_Improved_Gain_and_Tsys_No_RFI')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_May_2023_Improved_Gain_and_Tsys_No_RFI.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing GBTUWBR_Original_Specs')
+    calc_timing(pta,
+                gbuwb_nus,
+                rxspecfile="./uwbr_rxspecs/GBTUWBR_Original_Specs.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing CHIME-GBTUWBR_May_2023_Improved_Gain_No_RFI')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_May_2023_Improved_Gain_No_RFI.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
+    print('Timing CHIME-GBTUWBR_May_2023_OnSky_No_RFI')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_May_2023_OnSky_No_RFI.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
+    print('Timing CHIME-GBTUWBR_May_2023_Improved_Gain_and_Tsys_No_RFI')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_May_2023_Improved_Gain_and_Tsys_No_RFI.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
+
+    print('Timing CHIME-GBTUWBR_Original_Specs')
+    calc_timing(pta,
+                chime_uwbr_nus,
+                rxspecfile="./uwbr_rxspecs/CHIME-GBTUWBR_Original_Specs.txt",
+                dec_lim=(90., -20.),
+                lat=49.32,
+                gainmodel='cos',
+                gainexp=chime_uwbr_gainexp,
+                timefac=chime_uwbr_timefac)
     
-    print('Timing UWBR using May 2023 rcvr specs (no RFI, improved gain, improved Tsys)')
-    calc_timing(pta,
-                gbuwb_nus,
-                rxspecfile="./uwbr_rxspecs/GBTUWBR_NoRFI_May23_ImprovedGainTsys.txt",
-                t_int=1800.,
-                dec_lim=(90., -46.),
-                lat=38.42,
-                gainmodel=None,
-                gainexp=None)
     
     print('Timing GB140ft 400-800 MHz')
     gb140lo_nus = np.arange(.4, .8, .009)
