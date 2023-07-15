@@ -162,7 +162,7 @@ if __name__ == '__main__':
                 lat=18.44,
                 gainmodel=None,
                 gainexp=None)
-    
+
     print('Timing GB 800-1200')
     nus_gb800 = np.arange(.820 - .200 / 2, .820 + .200 / 2, 0.009)
     nus_gb1_2 = np.arange(1.510 - .800 / 2, 1.510 + .800 / 2, 0.009)[:-1]
@@ -170,6 +170,33 @@ if __name__ == '__main__':
     calc_timing(pta,
                 gbt80012_nus,
                 rxspecfile="GBT_Rcvr_800-Rcvr_1_2_logain.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+
+    print('Timing GB 800')
+    nus_gb800 = np.arange(.820 - .200 / 2, .820 + .200 / 2, 0.009)
+    nus_gb1_2 = np.arange(1.510 - .800 / 2, 1.510 + .800 / 2, 0.009)[:-1]
+    gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
+    calc_timing(pta,
+                nus_gb800,
+                rxspecfile="./rxspecs/GBT_Rcvr_800.txt",
+                t_int=1800.,
+                dec_lim=(90., -46.),
+                lat=38.42,
+                gainmodel=None,
+                gainexp=None)
+    
+    
+    print('Timing GB 1200')
+    nus_gb800 = np.arange(.820 - .200 / 2, .820 + .200 / 2, 0.009)
+    nus_gb1_2 = np.arange(1.510 - .800 / 2, 1.510 + .800 / 2, 0.009)[:-1]
+    gbt80012_nus = np.concatenate([nus_gb800, nus_gb1_2])
+    calc_timing(pta,
+                nus_gb1_2,
+                rxspecfile="./rxspecs/GBT_Rcvr_1_2.txt",
                 t_int=1800.,
                 dec_lim=(90., -46.),
                 lat=38.42,
