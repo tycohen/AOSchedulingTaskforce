@@ -1,5 +1,6 @@
 import cPickle
 import numpy as np
+from os import path
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 import frequencyoptimizer as fop
@@ -19,7 +20,7 @@ def calc_timing(pta,
     if rxspecfile is None:
         raise ValueError('rxspecfile must be defined')
     for p in pta.psrlist:
-        scope = Telescope(name=rxspecfile.strip(".txt"),
+        scope = Telescope(name=path.basename(rxspecfile).strip(".txt"),
                           dec_lim=dec_lim,
                           lat=lat,
                           gainmodel=gainmodel,
@@ -56,6 +57,7 @@ def calc_timing(pta,
                                              T_rx=scope_noise_init.get_T_rx(nus),
                                              epsilon=scope_noise_init.get_epsilon(nus),
                                              T=scope_noise_init.T)
+            p.telescope_noise.update({scope.name : scope_noise})
             pulsar_noise = fop.PulsarNoise('', 
                                            alpha=-1 * p.spindex,
                                            dtd=p.dtd,
@@ -129,7 +131,10 @@ def chime_only(write=False):
     return pta
     
 if __name__ == '__main__':
-    """ 'Main' function; calculate sigmas for multiple telescope configs"""
+    """
+    'Main' function; calculate sigmas for multiple telescope configs
+    and writes out to .pta file. File is overwritten each time.
+    """
     with open('NG15yr.pta', 'rb') as ptaf:
         pta = cPickle.load(ptaf)
     print('Timing AO L-S')

@@ -38,6 +38,9 @@ class Pulsar(object):
     sigmas : dict
                 dictionary of dictionaries of RMS components
                 for each instrument
+    telescope_noise : dict
+                dictionary of FrequencyOptimizer.TelescopeNoise objects
+                for each instrument
         """
     def __init__(self,
                  name=None,
@@ -55,6 +58,7 @@ class Pulsar(object):
                  spindex=None,
                  sig_j_single=None,
                  sigmas=None,
+                 telescope_noise=None,
                  *args,
                  **kwargs):
         """
@@ -76,6 +80,7 @@ class Pulsar(object):
         self.spindex = spindex
         self.sig_j_single = sig_j_single
         self.sigmas = {}
+        self.telescope_noise = {}
 
     def sigma_jitter(self, t_int):
         """Return intrinsic jitter noise (in us)
@@ -97,3 +102,23 @@ class Pulsar(object):
 
     def get_instr_keys(self):
         return [k for k in self.sigmas]
+
+    def detected(self, only=None):
+        """
+        Is the pulsar is detected by every telescope?
+        
+        Parameters
+        ----------
+        only : None or list (optional)
+                list of receiver keys to only check if not None
+
+        Returns
+        -------
+        bool
+        """
+        if only is None:
+            rcvrs = self.get_instr_keys()
+        else:
+            rcvrs = only
+        return all([self.sigmas[r]["sigma_tot"] > 0 for r in rcvrs])
+        
