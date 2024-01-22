@@ -24,7 +24,7 @@ BACKENDS = ['puppi', 'guppi', 'yuppi', 'VEGAS'] # in order of precedence
 LBAND_RCVRS = {'puppi': 'L-wide',
                'guppi': 'Rcvr1_2',
                'yuppi': 'L-Band',
-               'VEGAS': 'Rcvr1_2'} 
+               'VEGAS': 'Rcvr1_2'}
 DATADIR = '/lustre/aoc/users/pdemores/timing/toagen/data'
 BACKUPDATADIR = '/lustre/aoc/users/pdemores/timing/15yr_prelim/working'
 LOCALDATADIR = '.'
@@ -167,6 +167,31 @@ def get_ne2001_pars(df):
             tauds.append(np.nan)
             dists.append(np.nan)
     return dtds, dnuds, tauds, dists
+
+def update_flux_spindex_file(newfile,
+                             oldfile="psr_spect_index_flux_stat.txt"):
+    """
+    Replace old flux entries for a given pulsar-rcvr pair with a new entry
+    and add any entries unique to either file
+    """
+    updated_lines = []
+    with open(newfile, "r") as newf:
+        newlines = newf.readlines()
+    with open(oldfile, "r") as oldf:
+        for line in oldf:
+            oldstart = re.search("^([^\s]+)\s+([^\s]+)\s+([^\s]+)",
+                                 line).group(0)
+            for newl in newlines:
+                if newl.startswith(oldstart):
+                    updated_lines.append(newl)
+                    newlines.remove(newl)
+                    break
+            else:
+                updated_lines.append(line)
+    updated_lines += newlines
+    with open(oldfile, "w") as oldf:
+        oldf.write("".join([l.replace("\r", "") for l in updated_lines]))
+    return
 
 def get_flux_spindex(df):
     """
