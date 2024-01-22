@@ -20,12 +20,16 @@ from various sources. Distances are all DM distances even if
 pulsar has measured parallax.
 """
 
-BACKENDS = ['puppi', 'guppi', 'yuppi']
-LBAND_RCVRS = ['L-wide', 'Rcvr1_2', 'L-Band']
+BACKENDS = ['puppi', 'guppi', 'yuppi', 'VEGAS'] # in order of precedence 
+LBAND_RCVRS = {'puppi': 'L-wide',
+               'guppi': 'Rcvr1_2',
+               'yuppi': 'L-Band',
+               'VEGAS': 'Rcvr1_2'} 
 DATADIR = '/lustre/aoc/users/pdemores/timing/toagen/data'
 BACKUPDATADIR = '/lustre/aoc/users/pdemores/timing/15yr_prelim/working'
 LOCALDATADIR = '.'
 TEMPLATEDIR = os.path.join(DATADIR, 'templates')
+LOCALTEMPLATEDIR = os.path.join(LOCALDATADIR, 'templates')
 
 def read_txt_to_df():
     df = pd.read_csv('15yr_psrs.txt',
@@ -308,11 +312,16 @@ def get_parfile(name):
     return None
 
 def get_template(name):
-    for b, r in zip(BACKENDS, LBAND_RCVRS):
+    for b in BACKENDS:
+        r = LBAND_RCVRS[b]
         temppath = glob(os.path.join(TEMPLATEDIR,
                                      "{}.{}.{}.*.x.sum.sm".format(name,
                                                                   r,
                                                                   b.upper())))
+        temppath += glob(os.path.join(LOCALTEMPLATEDIR,
+                                      "{}.{}.{}.*.x.sum.sm".format(name,
+                                                                   r,
+                                                                   b.upper())))
         if len(temppath) > 0:
             return temppath[0]
     print("No template for {}".format(name))
