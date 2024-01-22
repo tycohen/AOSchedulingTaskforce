@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import cPickle
+import warnings
 import pandas as pd
 import numpy as np
 import pypulse
@@ -22,6 +23,8 @@ pulsar has measured parallax.
 BACKENDS = ['puppi', 'guppi', 'yuppi']
 LBAND_RCVRS = ['L-wide', 'Rcvr1_2', 'L-Band']
 DATADIR = '/lustre/aoc/users/pdemores/timing/toagen/data'
+BACKUPDATADIR = '/lustre/aoc/users/pdemores/timing/15yr_prelim/working'
+LOCALDATADIR = '.'
 TEMPLATEDIR = os.path.join(DATADIR, 'templates')
 
 def read_txt_to_df():
@@ -288,7 +291,20 @@ def get_parfile(name):
                     return os.path.join(DATADIR, b, name, f)
         except OSError:
             pass
-    print("No parfile for {}".format(name))
+    try:
+        for f in os.listdir(os.path.join(BACKUPDATADIR, name)):
+            if '.par' in f:
+                return os.path.join(BACKUPDATADIR, name, f)
+    except OSError:
+        pass
+    local_parfiles = glob(os.path.join(LOCALDATADIR,
+                                       "parfiles",
+                                       "*{}*.par".format(name)))
+    try:
+        return local_parfiles[0]
+    except IndexError:
+            pass
+    warnings.warn("No parfile for {}".format(name))
     return None
 
 def get_template(name):
