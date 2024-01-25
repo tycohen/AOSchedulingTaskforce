@@ -24,8 +24,10 @@ BACKENDS = ['puppi', 'guppi', 'yuppi', 'VEGAS'] # in order of precedence
 LBAND_RCVRS = {'puppi': 'L-wide',
                'guppi': 'Rcvr1_2',
                'yuppi': 'L-Band',
+               'yuppi': '1.5GHz',
                'VEGAS': 'Rcvr1_2'}
 DATADIR = '/lustre/aoc/users/pdemores/timing/toagen/data'
+TIMINGDIR = '/lustre/aoc/users/pdemores/timing'
 BACKUPDATADIR = '/lustre/aoc/users/pdemores/timing/15yr_prelim/working'
 LOCALDATADIR = '.'
 TEMPLATEDIR = os.path.join(DATADIR, 'templates')
@@ -398,8 +400,10 @@ def get_parfile(name):
     return None
 
 def get_template(name):
+    timing_yr = ["2013", "2015", "2016", "2017", "2019"]
     for b in BACKENDS:
         r = LBAND_RCVRS[b]
+        # temppaths in order of search precedence
         temppath = glob(os.path.join(TEMPLATEDIR,
                                      "{}.{}.{}.*.x.sum.sm".format(name,
                                                                   r,
@@ -408,6 +412,18 @@ def get_template(name):
                                       "{}.{}.{}.*.x.sum.sm".format(name,
                                                                    r,
                                                                    b.upper())))
+        # this catches some VLA L-band templates
+        temppath += glob(os.path.join(DATADIR, b, name,
+                                      "{}.{}.{}.*.P.sum.sm".format(name,
+                                                                   r,
+                                                                   b.upper())))
+        for y in timing_yr:
+            temppath += glob(os.path.join(TIMINGDIR,
+                                          "nanograv_timing_{}".format(y),
+                                          "templates",
+                                          "{}.{}.{}.*.x.sum.sm".format(name,
+                                                                       r,
+                                                                       b.upper())))
         if len(temppath) > 0:
             return temppath[0]
     print("No template for {}".format(name))
