@@ -81,6 +81,65 @@ def get_DM():
         dms.append(dm)
     return dms
 
+def get_ra():
+    '''
+    Search for parfiles for list of pulsar names, then search parfiles
+    for sky coordinates and convert to right ascension
+    '''
+    df = read_txt_to_df()
+    ras = []
+    for name in df['name']:
+        parfile = get_parfile(name)
+        if parfile is None:
+            ra = np.nan
+        with open(parfile, 'r') as f:
+            for line in f:
+                if re.match('RAJ\s+', line) is not None:
+                    valstr = line.split()[1].split(':')
+                    rastr = "".join(i for j in zip(valstr,
+                                                    ['h', 'm', 's']) for i in j)
+                    ra = Angle(rastr).degree
+                    break
+                elif re.match('ELAT\s+', line) is not None:
+                    lat = float(line.split()[1])
+                    for line in f:
+                        if re.match('ELONG\s+', line) is not None:
+                            lon = float(line.split()[1])
+                            ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
+                                              frame='barycentrictrueecliptic')
+                            ra = ecoord.icrs.ra.degree
+                            break
+                elif re.match('ELONG\s+', line) is not None:
+                    lon = float(line.split()[1])
+                    for line in f:
+                        if re.match('ELAT\s+', line) is not None:
+                            lat = float(line.split()[1])
+                            ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
+                                              frame='barycentrictrueecliptic')
+                            ra = ecoord.icrs.ra.degree
+                            break
+                elif re.match('BETA\s+', line) is not None:
+                    lat = float(line.split()[1])
+                    for line in f:
+                        if re.match('LAMBDA\s+', line) is not None:
+                            ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
+                                              frame='barycentrictrueecliptic')
+                            ra = ecoord.icrs.ra.degree
+                            lon = float(line.split()[1])
+                            break
+                elif re.match('LAMBDA\s+', line) is not None:
+                    lon = float(line.split()[1])
+                    for line in f:
+                        if re.match('BETA\s+', line) is not None:
+                            lat = float(line.split()[1])
+                            ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
+                                              frame='barycentrictrueecliptic')
+                            ra = ecoord.icrs.ra.degree
+                            break
+        ras.append(ra)
+    return ras
+    
+
 def get_dec():
     '''
     Search for parfiles for list of pulsar names, then search parfiles
