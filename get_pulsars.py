@@ -106,7 +106,7 @@ def get_dec():
                         if re.match('ELONG\s+', line) is not None:
                             lon = float(line.split()[1])
                             ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
-                                              frame='barycentricmeanecliptic')
+                                              frame='barycentrictrueecliptic')
                             dec = ecoord.icrs.dec.degree
                             break
                 elif re.match('ELONG\s+', line) is not None:
@@ -115,7 +115,7 @@ def get_dec():
                         if re.match('ELAT\s+', line) is not None:
                             lat = float(line.split()[1])
                             ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
-                                              frame='barycentricmeanecliptic')
+                                              frame='barycentrictrueecliptic')
                             dec = ecoord.icrs.dec.degree
                             break
                 elif re.match('BETA\s+', line) is not None:
@@ -123,7 +123,7 @@ def get_dec():
                     for line in f:
                         if re.match('LAMBDA\s+', line) is not None:
                             ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
-                                              frame='barycentricmeanecliptic')
+                                              frame='barycentrictrueecliptic')
                             dec = ecoord.icrs.dec.degree
                             lon = float(line.split()[1])
                             break
@@ -133,7 +133,7 @@ def get_dec():
                         if re.match('BETA\s+', line) is not None:
                             lat = float(line.split()[1])
                             ecoord = SkyCoord(lon=lon*u.deg, lat=lat*u.deg, 
-                                              frame='barycentricmeanecliptic')
+                                              frame='barycentrictrueecliptic')
                             dec = ecoord.icrs.dec.degree
                             break
         decs.append(dec)
