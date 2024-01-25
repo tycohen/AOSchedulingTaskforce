@@ -11,7 +11,7 @@ from astropy import units as u
 from astropy.coordinates import SkyCoord, Angle
 from PTAOptimizer.foppulsar import FOpPulsar
 from resultsreader import ResultsReader
-import ne2001_15y
+import pyne2001
 from pulsar import Pulsar
 from pta import PTA
 """
@@ -138,7 +138,6 @@ def get_ra():
                             break
         ras.append(ra)
     return ras
-    
 
 def get_dec():
     '''
@@ -198,34 +197,37 @@ def get_dec():
         decs.append(dec)
     return decs
 
-def get_ne2001_pars(df):
+def get_ne2001_pars(ras, decs, dms):
     """
     Read NE2001 params from pyne2001 dict
     Parameters
     ----------
-    df : pandas.DataFrame
+    ras : list or np.ndarray of right ascensions in deg
+    decs : list or np.ndarray of declinations in deg
 
     Returns
     -------
     dtds, dnuds, tauds, dists
     """
-    ne2001_dict = ne2001_15y.ne2001_results
     dtds = []
     dnuds = []
     tauds = []
     dists = []
-    for n in df['name']:
-        try:
-            dtds.append(ne2001_dict[n]['SCINTIME'])
-            dnuds.append(ne2001_dict[n]['SBW'] / 1000.) # MHz to GHz
-            tauds.append(ne2001_dict[n]['TAU'] * 1000.) # ms to us
-            dists.append(ne2001_dict[n]['DIST'])
-        except KeyError:
-            dtds.append(np.nan)
-            dnuds.append(np.nan)
-            tauds.append(np.nan)
-            dists.append(np.nan)
-    return dtds, dnuds, tauds, dists
+    ne2k1dicts = {}
+    df = read_txt_to_df()
+    eq_coords = SkyCoord(ra=ras*u.degree,
+                         dec=decs*u.degree,
+                         frame="icrs")
+    longs = eq_coords.galactic.l.degree
+    lats = eq_coords.galactic.b.degree
+    for l, b, dm, n in zip(longs, lats, dms, df['name']):
+        ne2001_dict = pyne2001.get_dist_full(l, b, dm)
+        dtds.append(ne2001_dict['SCINTIME'])
+        dnuds.append(ne2001_dict['SBW'] / 1000.) # MHz to GHz
+        tauds.append(ne2001_dict['TAU'] * 1000.) # ms to us
+        dists.append(ne2001_dict['DIST'])
+        ne2k1dicts[n] = ne2001_dict
+    return dtds, dnuds, tauds, dists, ne2k1dicts
 
 def update_flux_spindex_file(newfile,
                              oldfile="psr_spect_index_flux_stat.txt"):
