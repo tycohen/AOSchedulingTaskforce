@@ -35,6 +35,10 @@ class Pulsar(object):
                 spectral index
     sig_j_single : float
                     single-pulse RMS jitter
+    template : np.array
+                    template used to measure profile parameters
+    parfile : str
+              Parfile contents
     sigmas : dict
                 dictionary of dictionaries of RMS components
                 for each instrument
@@ -57,6 +61,8 @@ class Pulsar(object):
                  s_1000=None,
                  spindex=None,
                  sig_j_single=None,
+                 parfile=None,
+                 template=None,
                  sigmas=None,
                  telescope_noise=None,
                  *args,
@@ -79,6 +85,8 @@ class Pulsar(object):
         self.s_1000 = s_1000
         self.spindex = spindex
         self.sig_j_single = sig_j_single
+        self.parfile = parfile
+        self.template = template
         self.sigmas = {}
         self.telescope_noise = {}
 
