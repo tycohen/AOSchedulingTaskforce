@@ -380,6 +380,10 @@ def get_jitter(df):
 def make_pta(df, ptaname):
     pta = PTA(name=ptaname)
     for idx, psr in df.iterrows():
+        with open(get_parfile(psr['name']), "r") as parf:
+            parfile = "".join(parf.readlines())
+        template = pypulse.archive.Archive(get_template(psr['name']),
+                                           verbose=False).getData()
         pulsar = Pulsar(name=psr['name'],
                         period=psr['period'],
                         dm=psr['DM'],
@@ -393,7 +397,9 @@ def make_pta(df, ptaname):
                         uscale=psr['uscale'],
                         s_1000=psr['S_1000'],
                         spindex=psr['spindex'],
-                        sig_j_single=psr['sig_jitter'])
+                        sig_j_single=psr['sig_jitter'],
+                        parfile=parfile,
+                        template=template)
         pta.psrlist.append(pulsar)
     ptapath = '{}.pta'.format(ptaname)
     if _write_bool(ptapath):
