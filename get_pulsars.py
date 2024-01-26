@@ -350,6 +350,7 @@ def get_template_pars(df):
             if temp_units == 'SEC':
                 sp = pypulse.singlepulse.SinglePulse(ar.getData(),
                                                      period=p0)
+                sp.normalize()
             else:
                 raise ValueError("Template has units of {}, "
                                  " need time units.".format(temp_units))
